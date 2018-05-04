@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">TranslatorApp</string>
+    <string name="app_name">Translator</string>
+    <string name="home_page_text">Welcome!</string>
 </resources>
