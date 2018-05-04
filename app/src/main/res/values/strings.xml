@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Translator</string>
     <string name="home_page_text">Welcome!</string>
+    <string name="yoda">Yoda</string>
+    <string name="pirate">Pirate</string>
+    <string name="pig_latin">Pig Latin</string>
 </resources>
