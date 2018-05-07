@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import com.android.volley.Request
+import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.JsonRequest
@@ -46,19 +47,36 @@ class MainActivity : AppCompatActivity() {
         // Generate full url using root url and text
         val base = "http://api.funtranslations.com/translate"
         val text = translate_text_input.text.toString()
-        val url = "$base$endpoint?text=$text"
+        val url = "$base$endpoint"
+
 
         var translated: String? = "your shit's not getting updated"
 
+        var params = JSONObject()
+        params.put("text", text)
+
         // Make call
-        val request = JsonObjectRequest(Request.Method.POST, url, null,
-                Response.Listener { response ->
+        val queue = Volley.newRequestQueue(this)
+        val request = object : JsonObjectRequest(Request.Method.POST, url, params,
+                Response.Listener<JSONObject> { response ->
                     translated = response.getJSONObject("contents")?.getString("translation")
+                    System.out.println("JSON success")
                 },
                 Response.ErrorListener { error ->
                     System.out.println("Something's gone wrong: " + error.toString())
-                })
-        System.out.println(request.body)
+                }) {
+            override fun getHeaders(): Map<String, String> {
+                val headers = HashMap<String, String>()
+                //headers.put("Content-Type", "application/json")
+                return headers
+            }
+        }
+        queue.add(request)
+        queue.start()
+
+        translated += request.url
+        System.out.println(translated)
+
         val toast = Toast.makeText(this, translated, Toast.LENGTH_SHORT)
         toast.show()
     }
