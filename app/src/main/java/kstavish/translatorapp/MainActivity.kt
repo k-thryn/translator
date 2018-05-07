@@ -5,6 +5,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.JsonRequest
+import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_main.translate_text_input
 import kstavish.translatorapp.R.id.translate_text_input
 import org.json.JSONObject
@@ -43,15 +48,17 @@ class MainActivity : AppCompatActivity() {
         val text = translate_text_input.text.toString()
         val url = "$base$endpoint?text=$text"
 
-        var translated: String? = ""
+        var translated: String? = "your shit's not getting updated"
 
         // Make call
-        Executors.newSingleThreadExecutor().execute({
-            val result = URL(url).readText()
-            val obj = JSONObject(result)
-            translated = obj.getJSONObject("contents")?.getString("translated")
-        })
-
+        val request = JsonObjectRequest(Request.Method.POST, url, null,
+                Response.Listener { response ->
+                    translated = response.getJSONObject("contents")?.getString("translation")
+                },
+                Response.ErrorListener { error ->
+                    System.out.println("Something's gone wrong: " + error.toString())
+                })
+        System.out.println(request.body)
         val toast = Toast.makeText(this, translated, Toast.LENGTH_SHORT)
         toast.show()
     }
