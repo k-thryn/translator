@@ -1,5 +1,6 @@
 // Kotlin .gitignore file from JetBrains
 
+local.properties
 .DS_Store
 .idea/shelf
 /android.tests.dependencies
